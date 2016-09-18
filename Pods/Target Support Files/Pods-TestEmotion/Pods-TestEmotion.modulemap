@@ -1,0 +1,6 @@
+framework module Pods_TestEmotion {
+  umbrella header "Pods-TestEmotion-umbrella.h"
+
+  export *
+  module * { export * }
+}
