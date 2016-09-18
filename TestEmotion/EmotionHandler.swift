@@ -44,7 +44,7 @@ class EmotionHandler {
                 try self.parseJSON(imageURL, completion: { (coef, emot) in
 
                     
-                    if coef < 0 && emot == "neutral" {
+                    if coef < 0 && self.emotion == "neutral" {
                         self.emotion = "unknown"
 //                        return
                     }
@@ -72,36 +72,6 @@ class EmotionHandler {
         }
     }
 
-//    func getEmotion(imageURLs: [String]) -> String {
-//        
-//            for imageURL in imageURLs{
-//                do{
-//                    if emotion == "unknown" {
-//                        emotion = "neutral"
-//                    }
-//    
-//                    try self.parseJSON(imageURL, completion: { (coef, emot) in
-//    
-//                        if coef < 0 && emot == "neutral" {
-//                            self.emotion = "unknown"
-//                            return
-//                        }
-//    
-//                        if (coef > self.maxCoef) && (coef >= 0.18) {
-//                            self.maxCoef = coef
-//                            self.emotion = emot
-//                            return
-//                        }
-//                    })
-//    
-//                    
-//                }catch{
-//                    emotion = "unknown"
-//                }
-//            }
-//            return emotion
-//    }
-
     func takeMax1d(array: [Double]) -> emoteData {
         var currentMax = array[0]
         var curidx = 0
@@ -119,7 +89,7 @@ class EmotionHandler {
             the_emotion = "anger"
         }
         else if emotionindex == 1{
-            the_emotion = "contempt"
+            the_emotion = "anger" //actually contempt
         }
         else if emotionindex == 2{
             the_emotion = "disgust"
@@ -161,13 +131,22 @@ class EmotionHandler {
         let dataTaskEmotion = session.dataTaskWithRequest(emotionRequest){
             (let data: NSData?, let response: NSURLResponse?, let error: NSError?) -> Void in
             // 1: Check HTTP Response for successful GET request
-            guard let _ = response as? NSHTTPURLResponse, receivedEmotionData = data else {
+            guard let httpResponse = response as? NSHTTPURLResponse, receivedEmotionData = data else {
                 print("error: not a valid http response")
-                completion(-1.0, "error: unkown")
+                completion(-1.0, "error: unknown")
+                return
+            }
+            if(httpResponse.statusCode != 200){
+                completion(-1.0, "error: unknown")
                 return
             }
             
             let json = JSON(data: receivedEmotionData)
+            if((json.array)?.count==0){
+                completion(-1.0, "error: unknown")
+                return
+            }
+            
             
             var emotVals = [0.0,0.0,0.0,0.0,0.0,0.0,0.0]
             var largestFace = 0;
