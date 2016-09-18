@@ -122,6 +122,56 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
+func takeMax(array: [Double]) -> (max: Double, emotion: String) {
+    var currentMax = array[0]
+    var curidx = 0
+    var maxidx = 0
+    var the_emotion = "null"
+    for value in array[1..<array.count] {
+        curidx = curidx + 1
+        if (value > currentMax) {
+            currentMax = value
+            maxidx = curidx
+        }
+    }
+    let emotionindex = maxidx % 7
+    if emotionindex == 0{
+        the_emotion = "anger"
+    }
+    else if emotionindex == 1{
+        the_emotion = "contempt"
+    }
+    else if emotionindex == 2{
+        the_emotion = "disgust"
+    }
+    else if emotionindex == 3{
+        the_emotion = "fear"
+    }
+    else if emotionindex == 4{
+        the_emotion = "happiness"
+    }
+    else if emotionindex == 5{
+        the_emotion = "sadness"
+    }
+    else {
+        the_emotion = "surprise"
+    }
+    
+    return (currentMax, the_emotion)
+}
+
+
+print(takeMax([0.03,0.09,0.10,0.11,0.12,0.13,0.14,0.15]))
+
+func takeMax(array:[[Double]]) -> (max: Double, emotion: String){
+    var array1 = [Double]()
+    for item in array{
+        array1 = array1 + item
+    }
+    return takeMax(array1)
+}    
+    
+
 
 }
 
